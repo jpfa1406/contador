@@ -1,0 +1,35 @@
+Quartus Prime Archive log --	/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/Projeto_1_Relogio.qarlog
+
+Archive:	/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/Projeto_1_Relogio.qar
+Date:		Sun Nov  6 20:46:52 2022
+Quartus Prime		20.1.0 Build 711 06/05/2020 SJ Lite Edition
+
+	=========== Files Selected: ===========
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/Aula_9.qpf
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/Aula_9.qsf
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/Aula_9.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/ULASomaSub.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/Waveform.vwf
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/bancoRegistradoresArqRegMem.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/buffer_3_state.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/buffer_3_state_8portas.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/conversorHex7Seg.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/decoder3x8.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/decoderInstru.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/divisorGenerico.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/edgeDetector.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/flipFlop.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/logicDesvio.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/memoriaRAM.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/memoriaROM.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/muxGenerico2x1.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/muxGenerico4x1.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/muxJmp.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/processador.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/registradorGenerico.vhd
+/home/osboxes/DesComp/Projeto_1_Relogio/Relogio/somaConstante.vhd
+/home/osboxes/intelFPGA_lite/20.1/quartus/linux64/assignment_defaults.qdf
+	======= Total: 24 files to archive =======
+
+	================ Status: ===============
+All files archived successfully.

@@ -1,0 +1,294 @@
+Setup :
+LDI $0, R7
+
+STA @HEX0, R7 #Limpando os 7 segmentos
+STA @HEX1, R7
+STA @HEX2, R7
+STA @HEX3, R7
+STA @HEX4, R7
+STA @HEX5, R7
+
+STA @LEDR7, R7 #Limpando os leds
+STA @LEDR8, R7
+STA @LEDR9, R7
+
+STA @SUNI, R7 #Limpando os 7 segmentos
+STA @SDEC, R7
+STA @MUNI, R7
+STA @MDEC, R7
+STA @HUNI, R7
+STA @HDEC, R7
+
+STA @CLR0, R7 #Limpar KEY0
+STA @CLR1, R7 #Limpar KEY1
+STA @CLR2, R7 #Limpar KEY2
+STA @CLR3, R7 #Limpar KEY3
+STA @CLRR, R7 #Limpar FPGA_RESET
+
+LDI $1, R0
+STA @VAR1, R0 #Inicializando constante com 1
+LDI $10, R0
+STA @VAR10, R0 #Inicializando constante com 10
+LDI $6, R0
+STA @VAR6, R0 #Inicializando constante com 6
+LDI $3, R0
+STA @VAR3, R0 #Inicializando constante com 2
+LDI $5, R0
+STA @VAR5, R0 #Inicializando constante com 5
+LDI $9, R0
+STA @VAR9, R0 #Inicializando constante com 9
+LDI $4, R0
+STA @VAR4, R0 #Inicializando constante com 4
+LDI $2, R0
+STA @VAR2, R0 #Inicializando constante com 2
+
+Loop :
+LDA @KEY0, R0 #Ler KEY0
+ANDI @1, R0 #Aplicar máscara a leitura da KEY
+CEQ @VAR1, R0 #Comparar com 1
+JEQ @HubIncremento #Pular pra subrotina de incremento
+
+PosIncremento :
+LDA @KEY1, R0 #Ler KEY1
+ANDI @1, R0 #Aplicar máscara a leitura da KEY
+CEQ @VAR1, R0 #Comparar com 1
+JEQ @HubLimite #Pular pra subrotina de limite
+
+PosLimite :
+JSR @Verificar #Pular pra subrotina de verificar limite
+
+LDA @SUNI, R0 #Carrega acumulador com valor da unidade dos segundos
+STA @HEX0, R0 #Carrega unidade no HEX0
+LDA @SDEC, R0 #Carrega acumulador com valor da dezena dos segundos
+STA @HEX1, R0 #Carrega unidade no HEX1
+LDA @MUNI, R0 #Carrega acumulador com valor da unidade dos minutos
+STA @HEX2, R0 #Carrega unidade no HEX2
+LDA @MDEC, R0 #Carrega acumulador com valor da dezena dos minutos
+STA @HEX3, R0 #Carrega unidade no HEX3
+LDA @HUNI, R0 #Carrega acumulador com valor da unidade da hora
+STA @HEX4, R0 #Carrega unidade no HEX4
+LDA @HDEC, R0 #Carrega acumulador com valor da dezena da hora
+STA @HEX5, R0 #Carrega unidade no HEX5
+
+JMP @Loop #Reiniciar Loop
+
+HubIncremento :
+JSR @Incremento #Para usar RET
+JMP @PosIncremento #Voltar pro loop
+
+HubLimite :
+JSR @Limite #Para usar RET
+JMP @PosLimite #Voltar pro loop
+
+Incremento :
+STA @CLR0, R7
+
+LDA @SUNI, R0 #Carrega R0 com unidade dos segundos
+ADDI $1, R0 #Soma 1 com R0
+CEQ @VAR10, R0 #Compara com 10
+JEQ @SDezena #Caso 10, pular pra dezena dos segundos
+STA @SUNI, R0 #Caso contrario, salvar na unidade dos segundos
+RET #Retornar
+
+SDezena :
+STA @SUNI, R7 #Zera unidade dos segundos
+LDA @SDEC, R0 #Carrega dezena dos segundos no R0
+ADDI $1, R0 #Soma 1 com R0
+CEQ @VAR6, R0 #Compara com 6
+JEQ @MUnidade #Caso 6, pular pra unidade dos minutos
+STA @SDEC, R0 #Caso contrario, salvar na dezena dos minutos
+RET #Retornar
+
+MUnidade :
+STA @SDEC, R7 #Zera dezena dos segundos
+LDA @MUNI, R0 #Carrega unidade dos minutos em R0
+ADDI $1, R0 #Soma 1 com R0
+CEQ @VAR10, R0 #Compara com 10
+JEQ @MDezena #Caso 10, pular pra dezena dos minutos
+STA @MUNI, R0 #Caso contrario, salvar na centena
+RET #Retornar
+
+MDezena :
+STA @MUNI, R7 #Zera unidade dos minutos
+LDA @MDEC, R0 #Carrega dezena dos minutos em R0
+ADDI $1, R0 #Soma 1 com R0
+CEQ @VAR6, R0 #Compara com 6
+JEQ @HUnidade #Caso 6, pular pra unidade da hora
+STA @MDEC, R0 #Caso contrario, salvar na dezena dos minutos
+RET #Retornar
+
+HUnidade :
+STA @MDEC, R7 #Zera dezena dos minutos
+LDA @HUNI, R0 #Carrega unidade da hora em R0
+ADDI $1, R0 #Soma 1 com R0
+CEQ @VAR10, R0 #Compara com 10
+JEQ @HDezena #Caso 10, pular pra dezena da hora
+STA @HUNI, R0 #Caso contrario, salvar na unidade da hora
+RET #Retornar
+
+HDezena :
+STA @HUNI, R7 #Zera unidade da hora
+LDA @HDEC, R0 #Carrega dezena da hora em R0
+ADDI $1, R0 #Soma 1 com R0
+STA @HDEC, R0 #Carrega dezena da hora em R0
+RET #Retornar
+
+Limite :
+STA @CLR1, R7 #Limpar KEY1
+LDI $4, R0
+STA @LEDR7, R0 #Liga LEDR2 pra indicar aguardando leitura
+
+LimiteMUni :
+STA @CLR1, R7 #Limpar KEY1
+LDA @SW7, R1 #Leitura do SW0-7
+ANDI @15, R1 #Aplicar mascara a leitura do botao para só pegar SW(3 downto 0)
+CGT @VAR10, R1 #Verificar overflow do HEX
+JGT @LimiteMUniMax 
+PosLimiteMUni :
+STA @MUNI, R1 #Guarda na memoria valor da unidade dos minutos
+STA @HEX2, R1 #Carrega leitura do SW0-7 no HEX2
+LDA @KEY1, R0 #Ler KEY1
+ANDI @1, R0 #Aplicar máscara a leitura da KEY
+CEQ @VAR1, R0 #Ve se KEY1 está apertado
+STA @CLR1, R7 #Limpar KEY1
+JEQ @PosLMU #Se tiver, guarda e vai embora
+JMP @LimiteMUni #Caso contrario, faz de novo
+PosLMU :
+LDI $8, R0
+STA @LEDR7, R0 #Liga LEDR3 pra indicar aguardando leitura
+
+LimiteMDec :
+STA @CLR1, R7 #Limpar KEY1
+LDA @SW7, R1 #Leitura do SW0-7
+ANDI @7, R1 #Aplicar mascara a leitura do botao para só pegar SW(2 downto 0)
+CGT @VAR6, R1 #Verificar overflow do HEX
+JGT @LimiteMDecMax 
+PosLimiteMDec :
+STA @MDEC, R1 #Guarda na memoria valor da dezena dos minutos
+STA @HEX3, R1 #Carrega leitura do SW0-7 no HEX3
+LDA @KEY1, R0 #Ler KEY1
+ANDI @1, R0 #Aplicar máscara a leitura da KEY
+CEQ @VAR1, R0 #Ve se KEY1 está apertado
+STA @CLR1, R7 #Limpar KEY1
+JEQ @PosLMD #Se tiver, guarda e vai embora
+JMP @LimiteMDec #Caso contrario, faz de novo
+PosLMD :
+LDI $16, R0
+STA @LEDR7, R0 #Liga LEDR4 pra indicar aguardando leitura
+
+LimiteHUni :
+STA @CLR1, R7 #Limpar KEY1
+LDA @SW7, R1 #Leitura do SW0-7
+ANDI @15, R1 #Aplicar mascara a leitura do botao para só pegar SW(3 downto 0)
+CGT @VAR10, R1 #Verificar overflow do HEX
+JGT @LimiteHUniMax 
+PosLimiteHUni :
+STA @HUNI, R1 #Guarda na memoria valor da unidade da hora
+STA @HEX4, R1 #Carrega leitura do SW0-7 no HEX4
+LDA @KEY1, R0 #Ler KEY1
+ANDI @1, R0 #Aplicar máscara a leitura da KEY
+CEQ @VAR1, R0 #Ve se KEY1 está apertado
+STA @CLR1, R7 #Limpar KEY1
+JEQ @PosLHU #Se tiver, guarda e vai embora
+JMP @LimiteHUni #Caso contrario, faz de novo
+PosLHU :
+LDI $32, R0
+STA @LEDR7, R0 #Liga LEDR5 pra indicar aguardando leitura
+LDA @HUNI, R0 #Verificar unidade da hora -> se for maior que 4, nao pode colocar 2 na hora
+CGT @VAR4, R0 #Verificar overflow do HEX
+JGT @LimiteHDecRestringe 
+
+LimiteHDec :
+STA @CLR1, R7 #Limpar KEY1
+LDA @SW7, R1 #Leitura do SW0-7
+ANDI @3, R1 #Aplicar mascara a leitura do botao para só pegar SW(1 downto 0)
+CEQ @VAR3, R1 #Verificar overflow do HEX
+JEQ @LimiteHDecMax 
+PosLimiteHDec :
+STA @HDEC, R1 #Guarda na memoria valor da unidade da hora
+STA @HEX5, R1 #Carrega leitura do SW0-7 no HEX4
+LDA @KEY1, R0 #Ler KEY1
+ANDI @1, R0 #Aplicar máscara a leitura da KEY
+CEQ @VAR1, R0 #Ve se KEY1 está apertado
+STA @CLR1, R7 #Limpar KEY1
+JEQ @PosLHD #Se tiver, guarda e vai embora
+JMP @LimiteHDec #Caso contrario, faz de novo
+PosLHD :
+STA @LEDR7, R7 #Desliga LEDR0-7
+
+RET
+
+LimiteHDecRestringe :
+STA @CLR1, R7 #Limpar KEY1
+LDA @SW7, R1 #Leitura do SW0-7
+ANDI @1, R1 #Aplicar mascara a leitura do botao para só pegar SW(3 downto 0)
+STA @HDEC, R1 #Guarda na memoria valor da unidade da hora
+STA @HEX5, R1 #Carrega leitura do SW0-7 no HEX4
+LDA @KEY1, R0 #Ler KEY1
+ANDI @1, R0 #Aplicar máscara a leitura da KEY
+CEQ @VAR1, R0 #Ve se KEY1 está apertado
+STA @CLR1, R7 #Limpar KEY1
+JEQ @PosLHDR #Se tiver, guarda e vai embora
+JMP @LimiteHDecRestringe #Caso contrario, faz de novo
+PosLHDR :
+STA @LEDR7, R7 #Desliga LEDR0-7
+
+RET
+
+LimiteMUniMax :
+LDI $9, R1 #Carrega 9 no R1
+JMP @PosLimiteMUni #Volta
+
+LimiteMDecMax :
+LDI $5, R1 #Carrega 5 no R1
+JMP @PosLimiteMDec #Volta
+
+LimiteHUniMax :
+LDI $9, R1 #Carrega 9 no R1
+JMP @PosLimiteHUni #Volta
+
+LimiteHDecMax :
+LDI $2, R1 #Carrega 2 no R1
+JMP @PosLimiteHDec #Volta
+
+Verificar :
+LDA @SUNI, R3 #Carrega valor da unidade dos segundos
+CEQ @VAR9, R3 #Compara unidade com o limite
+JEQ @VerificarSDec #Se estiver no limite, checar dezena
+RET
+VerificarSDec :
+LDA @SDEC, R3 #Carrega valor da dezena
+CEQ @VAR5, R3 #Compara dezena com o limite
+JEQ @VerificarMUni #Se estiver no limite, checar centena
+RET
+VerificarMUni :
+LDA @MUNI, R3 #Carrega valor da centena
+CEQ @VAR9, R3 #Compara centena com o limite
+JEQ @VerificarMDec #Se estiver no limite, checar unidade de milhar
+RET
+VerificarMDec :
+LDA @MDEC, R3 #Carrega valor da unidade de milhar
+CEQ @VAR5, R3 #Compara unidade de milhar com o limite
+JEQ @VerificarHUni #Se estiver no limite, checar dezena de milhar
+RET
+VerificarHUni :
+LDA @HUNI, R3 #Carrega valor da dezena de milhar
+CEQ @VAR3, R3 #Compara dezena de milhar com o limite
+JEQ @VerificarHDec #Se estiver no limite, checar centena de milhar
+RET
+VerificarHDec :
+LDA @HDEC, R3 #Carrega valor da centena de milhar
+CEQ @VAR2, R3 #Compara centena de milhar com o limite
+JEQ @LimiteAtingido #Se estiver no limite, pular pra SR de limite atingido
+RET
+
+LimiteAtingido :
+STA @SUNI, R7 #Limpando os 7 segmentos
+STA @SDEC, R7
+STA @MUNI, R7
+STA @MDEC, R7
+STA @HUNI, R7
+STA @HDEC, R7
+
+Retorno :
+RET
