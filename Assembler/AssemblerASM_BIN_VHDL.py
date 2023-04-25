@@ -88,15 +88,11 @@ mne =	{
        "CEQ":   "1000",
        "JSR":   "1001",
        "RET":   "1010",
-       "ANDI":   "1011",
-       "CGT":   "1100",
-       "JGT":   "1101",
        "ADDI":  "1110",
-       "SUBI":  "1111"
 }
 
-#definição dos enderecos, variáveis e constantes
-#dos respectivos inputs e outputs (em Decimal)
+#Constantes na memoria
+#0 ~ 63 endereços RAM
 mapa = {
         "LEDR7": 256,
         "LEDR8": 257,
@@ -119,23 +115,14 @@ mapa = {
         "KEY3": 355,
         "FPGA_RESET": 356,
 
-        "SUNI": 0,
-        "SDEC": 1,
-        "MUNI": 2,
-        "MDEC": 3,
-        "HUNI": 4,
-        "HDEC": 5,
+        "UNI": 0,
+        "DEC": 1,
+        "CEN": 2,
 
-        "VAR1": 7,
-        "VAR10": 8,
-        "VAR6": 9,
-        "VAR3": 10,
-        "VAR5": 11,
-        "VAR9": 12,
-        "VAR4": 13,
-        "VAR2": 14,
-
-        "FLAG": 15,
+        "VAR1" : 3,
+        "VAR10": 4,
+        "ZERO" : 5,
+        "COUNT": 16,
 
         "CLR0": 511,
         "CLR1": 510,
@@ -145,18 +132,18 @@ mapa = {
 }
 
 # definição dos registradores (em decimal)
-regis = {
-        "R0" : 0, #Reg pra uso geral
-        "R1" : 1, 
+regs = {
+        "R0" : 0, #Reg ZERO
+        "R1" : 1, #Reg geral
         "R2" : 2, 
         "R3" : 3, 
         "R4" : 4, 
         "R5" : 5, 
         "R6" : 6, 
-        "R7" : 7, #Segura 0
+        "R7" : 7
 }
 
-jumps = ["JMP", "JEQ", "JSR", "RET", "JGT"]
+jumps = ["JMP", "JEQ", "JSR", "RET"]
 
 #Converte o valor após o caractere arroba '@'
 #em um valor hexadecimal de 2 dígitos (8 bits)
@@ -175,9 +162,9 @@ def converteReg(line):
     line = line.split(' ')
     if len(line) > 2:
         if '@' in line[1]:
-            return f"{regis[line[2]]:03b}"
+            return f"{regs[line[2]]:03b}"
         else:
-            return f"{regis[line[2]]:03b}"
+            return f"{regs[line[2]]:03b}"
     else:
         return "000"
  
